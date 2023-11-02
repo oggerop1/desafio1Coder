@@ -8,7 +8,7 @@ class ProductManager {
   }
 
   addProduct(producto) {
-    if (!this.productos.includes(producto.stock)) {  
+    if (!this.productos.includes(producto.code)) {  
       if (this.productos.length === 0) {
         producto.id = 1;
       } else {
