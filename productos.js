@@ -8,7 +8,8 @@ class ProductManager {
   }
 
   addProduct(producto) {
-    if (!this.productos.includes(producto.code)) {  
+    const produc = this.productos.find((produc) => produc.code === producto.code);
+    if (!produc){  
       if (this.productos.length === 0) {
         producto.id = 1;
       } else {
@@ -16,9 +17,7 @@ class ProductManager {
         producto.id = this.productos[this.productos.length - 1].id + 1;
       }
         this.productos.push(producto);
-      }else {
-      return "ya existe el codigo";
-    }
+    }   
   }
 
   getProductById(idProducto) {
@@ -70,7 +69,18 @@ manejadorProductos.addProduct(
   )
 );
 
+manejadorProductos.addProduct(
+  new Producto(
+    "producto prueba 22",
+    "Este es un producto prueba22",
+    200,
+    "Sin imagen",
+    "abc124",
+    25
+  )
+);
+
 console.log(manejadorProductos.getProducts());
 
 console.log("muestra producto del id");
-console.log(manejadorProductos.getProductById(2));
+console.log(manejadorProductos.getProductById(1));
