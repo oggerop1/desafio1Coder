@@ -1,13 +1,39 @@
+
+// CAMBIAR  LOS NOMBRES A UN SOLO IDIOMA.
+
+const fs = require('fs');
 class ProductManager {
-  constructor() {
-    this.productos = [];
+  constructor(fileName) {
+    this.fileName = fileName;
+
+    if(fs.existsSync(fileName)){
+      try{
+        let productos = fs.readFileSync(fileName,"utf-8");
+        this.productos = JSON.parse(productos);
+      }catch(error){
+        this.productos = [];
+      }
+    }else{
+      this.productos = [];
+    }
+    
+  }
+
+  async saveFile(data){
+    try{
+      await fs.promises.writeFile(this.fileName, JSON.stringify(data, null, '\t' ));
+      return true;
+    }catch(error){
+      console.log("hubo un error")
+      return false;
+    }
   }
 
   getProducts() {
     return this.productos;
   }
 
-  addProduct(producto) {
+  async addProduct(producto) {
     const produc = this.productos.find((produc) => produc.code === producto.code);
     if (!produc){  
       if (this.productos.length === 0) {
@@ -17,6 +43,14 @@ class ProductManager {
         producto.id = this.productos[this.productos.length - 1].id + 1;
       }
         this.productos.push(producto);
+        
+        const resp = await this.saveFile(this.productos);
+       
+        if(resp){
+          console.log('producto creado');
+        }else{
+          console.log('hubo un error');
+        }
     }   
   }
 
@@ -45,7 +79,7 @@ class Producto {
 
 // Pruebas
 
-const manejadorProductos = new ProductManager();
+const manejadorProductos = new ProductManager("./productos.json");
 
 manejadorProductos.addProduct(
   new Producto(
